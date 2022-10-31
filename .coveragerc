@@ -1,0 +1,9 @@
+; Para mais informações:
+; https://coverage.readthedocs.io/en/latest/config.html
+
+[run]
+branch = true
+omit = recomendation/tests/*
+
+[html]
+directory = coverage
