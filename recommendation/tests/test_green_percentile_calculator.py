@@ -3,16 +3,45 @@ from pandas.testing import assert_frame_equal
 import pytest
 from pytest import approx
 
-from recomendation.green import GreenPercentileCalculator
-from recomendation.tariff import green_tariff
+from recommendation.green import GreenPercentileCalculator
 
-from .util import consumption_history, g_expected_summary, g_expected_percentiles
+from .readcsv import test_cases
+
+from .readcsv import consumption_history, g_expected_summary, g_expected_percentiles
 
 PERCENTILES = GreenPercentileCalculator.PERCENTILES
 PERCENTILE_HEADERS = GreenPercentileCalculator.PERCENTILE_HEADERS
 SUMMARY_HEADERS = GreenPercentileCalculator.SUMMARY_HEADERS
 
+test_data = [(_id) for _id in test_cases.keys()]
 
+ABSOLUTE_TOLERANCE = 0.01
+
+@pytest.mark.parametrize('_id', test_data)
+def test_blue_per_calculator(_id: str):
+    data = test_cases[_id]
+    consumption_history = data.consumption_history
+    sut = GreenPercentileCalculator(consumption_history, data.green_tariff)
+    result = sut.calculate()
+
+    # teste percentiles
+    for p in PERCENTILES:
+        p_str = str(p)
+        assert_frame_equal(
+            # Desconsidera a coluna total_in_reais,
+            # que é testada nas asserções seguintes:
+            result.percentiles[p_str].iloc[:, 0:-2],
+            data.expected_green_percentiles[p_str].iloc[:, 0:-2],
+            check_exact=False,
+            atol=ABSOLUTE_TOLERANCE)
+
+    # teste resumo
+    assert_frame_equal(
+        result.summary,
+        data.expected_green_summary,
+        check_exact=False,
+        atol=ABSOLUTE_TOLERANCE)
+    
 class TestGreenPercentileCalculator:
     consumption_history: DataFrame
     sut: GreenPercentileCalculator
@@ -22,7 +51,7 @@ class TestGreenPercentileCalculator:
         self.consumption_history = consumption_history
         self.expected_summary = g_expected_summary
         self.expected_percentiles = g_expected_percentiles
-        self.sut = GreenPercentileCalculator(self.consumption_history, green_tariff)
+        self.sut = GreenPercentileCalculator(self.consumption_history,  test_cases['1011101-5'].green_tariff)
         self.result = self.sut.calculate()
 
     @pytest.mark.order(3)

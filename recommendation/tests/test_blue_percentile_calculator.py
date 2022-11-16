@@ -3,25 +3,57 @@ from pandas.testing import assert_frame_equal
 import pytest
 from pytest import approx
 
-from recomendation.blue import BluePercentileCalculator
-from recomendation.tariff import blue_tariff
+from recommendation.blue import BluePercentileCalculator
 
-from .util import consumption_history, b_expected_percentiles, b_expected_summary
 
 PERCENTILES = BluePercentileCalculator.PERCENTILES
 PERCENTILE_HEADERS = BluePercentileCalculator.PERCENTILE_HEADERS
 SUMMARY_HEADERS = BluePercentileCalculator.SUMMARY_HEADERS
 
+ABSOLUTE_TOLERANCE = 0.01
+
+from .readcsv import test_cases
+
+test_data = [(_id) for _id in test_cases.keys()]
+
+
+@pytest.mark.parametrize('_id', test_data)
+def test_blue_per_calculator(_id: str):
+    # setup
+    data = test_cases[_id]
+    consumption_history = data.consumption_history
+    sut = BluePercentileCalculator(consumption_history, data.blue_tariff)
+    result = sut.calculate()
+
+    # teste percentiles
+    for p in PERCENTILES:
+        p_str = str(p)
+        assert_frame_equal(
+            # Desconsidera a coluna total_in_reais,
+            # que é testada nas asserções seguintes:
+            result.percentiles[p_str].iloc[:, 0:-2],
+            data.expected_blue_percentiles[p_str].iloc[:, 0:-2],
+            check_exact=False,
+            atol=ABSOLUTE_TOLERANCE)
+
+    # teste resumo
+    assert_frame_equal(
+        result.summary,
+        data.expected_blue_summary,
+        check_exact=False,
+        atol=ABSOLUTE_TOLERANCE)
+
+
+
 class TestBluePercentileCalculator:
     consumption_history: DataFrame
     sut: BluePercentileCalculator
-    ABSOLUTE_TOLERANCE = 0.01
 
     def setup_class(self):
-        self.consumption_history = consumption_history
-        self.expected_summary = b_expected_summary
-        self.expected_percentiles = b_expected_percentiles
-        self.sut = BluePercentileCalculator(self.consumption_history, blue_tariff)
+        self.consumption_history = test_cases['1011101-5'].consumption_history
+        self.expected_percentiles = test_cases['1011101-5'].expected_blue_percentiles
+        self.expected_summary = test_cases['1011101-5'].expected_blue_summary
+        self.sut = BluePercentileCalculator(self.consumption_history, test_cases['1011101-5'].blue_tariff)
         self.result = self.sut.calculate()
 
     @pytest.mark.order(1)
@@ -34,7 +66,7 @@ class TestBluePercentileCalculator:
                 self.result.percentiles[p_str].iloc[:, 0:-2],
                 self.expected_percentiles[p_str].iloc[:, 0:-2],
                 check_exact=False,
-                atol=self.ABSOLUTE_TOLERANCE)
+                atol=ABSOLUTE_TOLERANCE)
 
         assert approx(695755.82) == self.result.percentiles['0.1'].total_in_reais
         assert approx(656298.46) == self.result.percentiles['0.2'].total_in_reais
@@ -54,7 +86,7 @@ class TestBluePercentileCalculator:
             self.result.summary,
             self.expected_summary,
             check_exact=False,
-            atol=self.ABSOLUTE_TOLERANCE)
+            atol=ABSOLUTE_TOLERANCE)
 
         assert approx(311.0) == self.result.summary.peak_demand_in_kw
         assert approx(467.0) == self.result.summary.off_peak_demand_in_kw
