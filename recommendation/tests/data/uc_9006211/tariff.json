@@ -1,0 +1,17 @@
+{
+    "blue": {
+        "peak_tusd_in_reais_per_kw": 57.59,
+        "peak_tusd_in_reais_per_mwh": 77.86,
+        "peak_te_in_reais_per_mwh": 453.12,
+        "off_peak_tusd_in_reais_per_kw": 22.76,
+        "off_peak_tusd_in_reais_per_mwh": 77.86,
+        "off_peak_te_in_reais_per_mwh": 281.29
+    },
+    "green": {
+        "peak_tusd_in_reais_per_mwh": 1479.49,
+        "peak_te_in_reais_per_mwh": 453.12,
+        "off_peak_tusd_in_reais_per_mwh": 77.86,
+        "off_peak_te_in_reais_per_mwh": 281.29,
+        "na_tusd_in_reais_per_kw": 22.76
+    }
+}

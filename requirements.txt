@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-pytest==7.1.2
-numpy==1.23.0
-=======
 pandas==1.4.3
 numpy==1.23.0
 pytest==7.1.2
 pytest-order==1.0.1
 pytest-cov==4.0.0
->>>>>>> c2fffd914bbd061c9d00da8a91e5c2f5a7e3778b

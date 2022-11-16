@@ -3,7 +3,7 @@
 
 [run]
 branch = true
-omit = recomendation/tests/*
+omit = recommendation/tests/*
 
 [html]
 directory = coverage

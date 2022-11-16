@@ -1,10 +1,10 @@
 from typing import Literal
 from pandas import DataFrame
-from recomendation.green import GreenPercentileCalculator, GreenPercentileResult, GreenTariff
-from recomendation.blue import BluePercentileCalculator, BluePercentileResult, BlueTariff
+from recommendation.green import GreenPercentileCalculator, GreenPercentileResult, GreenTariff
+from recommendation.blue import BluePercentileCalculator, BluePercentileResult, BlueTariff
 
 
-class ContractRecomendationResult:
+class ContractRecommendationResult:
     '''
     Deve refletir a tabela final de Template 2!Tabelas
     '''
@@ -12,21 +12,21 @@ class ContractRecomendationResult:
     def __init__(self):
         self.frame: DataFrame
         self.current_contract: DataFrame
-        self.best_tariff_type = ''
-        self.recomended_off_peak_demand_in_kw = .0
+        self.recommended_tariff_flag = ''
+        self.recommended_off_peak_demand_in_kw = .0
 
 
-class ContractRecomendationCalculator:
+class ContractRecommendationCalculator:
     '''
     Não sei se precisa disso tudo como argumento no construtor
     '''
-    COLUMNS = ['recomended_peak_demand_in_kw', 'recomended_off_peak_demand_in_kw',
+    HEADERS = ['recommended_peak_demand_in_kw', 'recommended_off_peak_demand_in_kw',
                'consumption_value_in_reais', 'demand_value_in_reais',
-               'recomended_contract_value_in_reais',
+               'recommended_contract_value_in_reais',
                'percentage_consumption', 'percentage_demand',
                'absolute_difference', 'percentage_difference']
 
-    CURRENT_CONTRACT_COLUMNS = ['consumption_value_in_reais', 'demand_value_in_reais',
+    CURRENT_CONTRACT_HEADERS = ['consumption_value_in_reais', 'demand_value_in_reais',
                                 'current_value_in_reais', 'percentage_consumption',
                                 'percentage_demand']
 
@@ -35,57 +35,57 @@ class ContractRecomendationCalculator:
         consumption_history: DataFrame,
         blue_summary: BluePercentileResult,
         green_summary: GreenPercentileResult,
-        current_tariff_type: Literal['blue', 'green'],
+        current_tariff_flag: Literal['blue', 'green'],
         green_tariff: GreenTariff,
         blue_tariff: BlueTariff,
     ):
         self.green_tariff = green_tariff
         self.blue_tariff = blue_tariff
         self.consumption_history = consumption_history
-        self.current_tariff_type = current_tariff_type
+        self.current_tariff_flag = current_tariff_flag
         self.blue_summary = blue_summary
         self.green_summary = green_summary
-        self.frame = DataFrame(columns=self.COLUMNS)
+        self.frame = DataFrame(columns=self.HEADERS)
 
-        self.current_contract = DataFrame(columns=self.CURRENT_CONTRACT_COLUMNS)
+        self.current_contract = DataFrame(columns=self.CURRENT_CONTRACT_HEADERS)
         self._calculate_current_contract()
 
     def calculate(self):
-        rec = ContractRecomendationResult()
+        rec = ContractRecommendationResult()
         rec.current_contract = self.current_contract
-        frame = DataFrame(columns=self.COLUMNS)
+        frame = DataFrame(columns=self.HEADERS)
 
         if self.blue_summary.total_total_value_in_reais < self.green_summary.total_total_value_in_reais:
-            rec.best_tariff_type = 'blue'
-            frame.recomended_off_peak_demand_in_kw = self.blue_summary.off_peak_demand_in_kw
+            rec.recommended_tariff_flag = 'blue'
+            frame.recommended_off_peak_demand_in_kw = self.blue_summary.off_peak_demand_in_kw
             frame.consumption_value_in_reais = self.blue_summary.consumption_value_in_reais
             frame.demand_value_in_reais = self.blue_summary.demand_value_in_reais
         else:
-            rec.best_tariff_type = 'green'
-            frame.recomended_off_peak_demand_in_kw = self.green_summary.off_peak_demand_in_kw
+            rec.recommended_tariff_flag = 'green'
+            frame.recommended_off_peak_demand_in_kw = self.green_summary.off_peak_demand_in_kw
             frame.consumption_value_in_reais = self.green_summary.consumption_value_in_reais
             frame.demand_value_in_reais = self.green_summary.demand_value_in_reais
 
-        frame.recomended_contract_value_in_reais = \
+        frame.recommended_contract_value_in_reais = \
             frame.consumption_value_in_reais + frame.demand_value_in_reais
 
         frame.percentage_consumption = \
-            frame.consumption_value_in_reais / frame.recomended_contract_value_in_reais
+            frame.consumption_value_in_reais / frame.recommended_contract_value_in_reais
 
         frame.percentage_demand = \
-            frame.demand_value_in_reais / frame.recomended_contract_value_in_reais
+            frame.demand_value_in_reais / frame.recommended_contract_value_in_reais
 
         frame.absolute_difference = \
-            self.current_contract.current_value_in_reais - frame.recomended_contract_value_in_reais
+            self.current_contract.current_value_in_reais - frame.recommended_contract_value_in_reais
         frame.percentage_difference = \
-            1 - frame.recomended_contract_value_in_reais/self.current_contract.current_value_in_reais
+            1 - frame.recommended_contract_value_in_reais/self.current_contract.current_value_in_reais
 
-        frame.recomended_peak_demand_in_kw = frame.recomended_peak_demand_in_kw.astype('float64')
+        frame.recommended_peak_demand_in_kw = frame.recommended_peak_demand_in_kw.astype('float64')
         rec.frame = frame
         return rec
 
     def _calculate_current_contract(self):
-        if self.current_tariff_type == 'green':
+        if self.current_tariff_flag == 'green':
             self.current_contract.consumption_value_in_reais = \
                 self.consumption_history.consumption_peak_in_kwh * \
                 (self.green_tariff.peak_tusd_in_reais_per_mwh + self.green_tariff.peak_te_in_reais_per_mwh) \
@@ -120,10 +120,10 @@ class ContractRecomendationCalculator:
             self.current_contract.demand_value_in_reais / self.current_contract.current_value_in_reais
 
 
-class RecomendationResult:
+class RecommendationResult:
     ...
 
-class RecomendationCalculator:
+class RecommendationCalculator:
     def __init__(
         self,
         consumption_history: DataFrame,
@@ -141,13 +141,13 @@ class RecomendationCalculator:
 
     def calculate(self):
         '''
-        Essa função ainda deve voltar um RecomendationResult, manipulando
-        ou incluindo ContractRecomendationResult
+        Essa função ainda deve voltar um RecommendationResult, manipulando
+        ou incluindo ContractRecommendationResult
         '''
         b_result = self.blue_calculator.calculate()
         g_result = self.green_calculator.calculate()
 
-        rec_calculator = ContractRecomendationCalculator(
+        rec_calculator = ContractRecommendationCalculator(
             self.consumption_history,
             b_result.summary,
             g_result.summary,

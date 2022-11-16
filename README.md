@@ -7,11 +7,11 @@ rascunhando o módulo de recomendação do contrato.
 
 "Arquitetura" das calculadoras:
 
-    RecomendationCalculator
+    RecommendationCalculator
         BlueCalculator | GreenCalculator
-        ContractRecomendationCalculator
+        ContractRecommendationCalculator
 
-    Entrada -> RecomendationCalculator -> Saída
+    Entrada -> RecommendationCalculator -> Saída
 
 O `|` é pra indicar que não há uma ordem obrigatória entre verde e azul.
 
@@ -25,6 +25,21 @@ O `|` é pra indicar que não há uma ordem obrigatória entre verde e azul.
 - tabela do contrato atual
 - tabela do contrato recomendado
 - e outras coisas a serem definidas
+
+## Dados de entrada e saída
+
+Os dados estão dentrada e saída estão em `recommendation/tests/data/`.
+
+Até o momento desta escrita, o arquivo `data/consumption.csv` contém os dados de
+entrada do cálculo, enquanto que os arquivos `data/{blue|green}_per_*.csv` são 
+respostas esperadas para os testes.
+
+Algumas das respostas esperadas estão hard coded nos casos de teste. Esses valores,
+assim como os dos arquivos, foram obtidos diretamente da planilha.
+
+Para ter uma ideia dos dados de entrada e saída e suas formas, dê uma
+olhada em [docs/entrada-saida.md](docs/entrada-saida.md).
+
 
 ## Setup
 
@@ -73,15 +88,3 @@ marcado com `@pytest.mark.order(1)` pode ser executado isoladamente.
 
 Para saber mais sobre como filtrar testes por módulo, classes ou métodos, consulte
 a [documentação do Pytest](https://docs.pytest.org/en/4.6.x/example/markers.html#using-k-expr-to-select-tests-based-on-their-name).
-
-## Entrada e saída
-
-Até o momento desta escrita, o arquivo `data/consumption.csv` contém os dados de
-entrada do cálculo, enquanto que os arquivos `data/{blue|green}_per_*.csv` são 
-respostas esperadas para os testes.
-
-Algumas das respostas esperadas estão hard coded nos casos de teste. Esses valores,
-assim como os dos arquivos, foram obtidos diretamente da planilha.
-
-Para ter uma ideia dos dados de entrada e saída e suas formas, dê uma
-olhada em [docs/entrada-saida.md](docs/entrada-saida.md).
