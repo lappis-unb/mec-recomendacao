@@ -1,16 +1,7 @@
-from dataclasses import dataclass
 from math import inf
 from pandas import DataFrame
 from numpy import ceil as roundup
-
-@dataclass
-class BlueTariff:
-    peak_tusd_in_reais_per_kw: float
-    peak_tusd_in_reais_per_mwh: float
-    peak_te_in_reais_per_mwh: float
-    off_peak_tusd_in_reais_per_kw: float
-    off_peak_tusd_in_reais_per_mwh: float
-    off_peak_te_in_reais_per_mwh: float
+from recommendation.tariff import BlueTariff
 
 
 class BluePercentileResult:

@@ -12,8 +12,6 @@ class ContractRecommendationResult:
     def __init__(self):
         self.frame: DataFrame
         self.current_contract: DataFrame
-        # Não precisa do prefixo "recommended". Essa inforamação já está
-        # no contexto da classe.
         self.tariff_flag = ''
         self.off_peak_demand_in_kw = .0
 

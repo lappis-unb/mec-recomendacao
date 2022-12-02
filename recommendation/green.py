@@ -1,18 +1,7 @@
-from dataclasses import dataclass
 from math import inf
 from pandas import DataFrame
 from numpy import ceil as roundup
-import numpy as np
-
-
-@dataclass
-class GreenTariff:
-    peak_tusd_in_reais_per_mwh: float
-    peak_te_in_reais_per_mwh: float
-    off_peak_tusd_in_reais_per_mwh: float
-    off_peak_te_in_reais_per_mwh: float
-    na_tusd_in_reais_per_kw: float
-
+from recommendation.tariff import GreenTariff
 
 class GreenPercentileResult:
     def __init__(self, p: 'dict[str, DataFrame]', s: DataFrame):

@@ -29,13 +29,13 @@ class CsvData:
     consumption_history: DataFrame
     blue_tariff: BlueTariff
     green_tariff: GreenTariff
+    expected_recommended_tariff_flag: str
     expected_blue_percentiles: dict[str, DataFrame]
     expected_green_percentiles: dict[str, DataFrame]
     expected_blue_summary: DataFrame
     expected_green_summary: DataFrame
     expected_current_contract: DataFrame
     expected_recommendation: DataFrame
-    expected_recommended_tariff_flag: str
 
 class CsvReader:
     def __init__(self, uc_id: str):
