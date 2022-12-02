@@ -5,7 +5,9 @@ from recommendation import RecommendationCalculator
 from recommendation.blue import BluePercentileCalculator
 from recommendation.green import GreenPercentileCalculator
 
-from .readcsv import test_cases
+from recommendation import RecommendationCalculator
+
+from tests.recommendation.readcsv import test_cases
 
 B_PERCENTILES = BluePercentileCalculator.PERCENTILES
 B_PERCENTILE_HEADERS = BluePercentileCalculator.PERCENTILE_HEADERS

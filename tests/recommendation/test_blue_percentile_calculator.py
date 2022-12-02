@@ -12,7 +12,7 @@ SUMMARY_HEADERS = BluePercentileCalculator.SUMMARY_HEADERS
 
 ABSOLUTE_TOLERANCE = 0.01
 
-from .readcsv import test_cases
+from tests.recommendation.readcsv import test_cases
 
 test_data = [(_id) for _id in test_cases.keys()]
 
@@ -56,7 +56,6 @@ class TestBluePercentileCalculator:
         self.sut = BluePercentileCalculator(self.consumption_history, test_cases['1011101-5'].blue_tariff)
         self.result = self.sut.calculate()
 
-    @pytest.mark.order(1)
     def test_calculates_percentiles(self):
         for p in PERCENTILES:
             p_str = str(p)
@@ -80,7 +79,6 @@ class TestBluePercentileCalculator:
         assert approx(534204.22) == self.result.percentiles['0.95'].total_in_reais
         assert approx(542520.09) == self.result.percentiles['0.98'].total_in_reais
 
-    @pytest.mark.order(2)
     def test_calculates_summary(self):
         assert_frame_equal(
             self.result.summary,

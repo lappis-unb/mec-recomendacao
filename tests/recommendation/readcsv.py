@@ -39,7 +39,7 @@ class CsvData:
 
 class CsvReader:
     def __init__(self, uc_id: str):
-        data_path = join('recommendation', 'tests', 'data')
+        data_path = join('tests', 'recommendation', 'data')
         self.path = join(data_path, f'uc_{uc_id}')
     
     def run(self) -> CsvData:

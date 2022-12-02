@@ -5,9 +5,9 @@ from pytest import approx
 
 from recommendation.green import GreenPercentileCalculator
 
-from .readcsv import test_cases
+from tests.recommendation.readcsv import test_cases
 
-from .readcsv import consumption_history, g_expected_summary, g_expected_percentiles
+from tests.recommendation.readcsv import consumption_history, g_expected_summary, g_expected_percentiles
 
 PERCENTILES = GreenPercentileCalculator.PERCENTILES
 PERCENTILE_HEADERS = GreenPercentileCalculator.PERCENTILE_HEADERS
