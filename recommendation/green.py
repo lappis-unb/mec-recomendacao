@@ -35,7 +35,10 @@ class GreenPercentileCalculator():
             p_str = str(p)
             percentiles[p_str] = DataFrame(columns=self.PERCENTILE_HEADERS)
 
-            self.__calculate_percentile(percentiles, p, p_str)
+            # Calcula percentil fora de pico
+            off_peak_demand_in_kw = self \
+                .consumption_history.measured_off_peak_demand_in_kw.quantile(p)
+            percentiles[p_str].off_peak_demand_in_kw = [off_peak_demand_in_kw]*self.history_length
 
             # Ultrapassagem = max(0, demanda_medida - demanda_percentil)
             percentiles[p_str].exceeded_peak_demand_in_kw = \
