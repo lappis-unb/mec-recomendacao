@@ -39,7 +39,7 @@ def test_recommendation(_id: str):
         check_exact=False,
         atol=ABSOLUTE_TOLERANCE)
 
-    assert data.expected_recommended_tariff_flag == result.recommended_tariff_flag
+    assert data.expected_recommended_tariff_flag == result.tariff_flag
 
     assert_frame_equal(
         data.expected_recommendation,
