@@ -37,18 +37,14 @@ class BluePercentileCalculator():
             percentiles[p_str] = DataFrame(columns=self.PERCENTILE_HEADERS)
 
             # Calcula percentil em pico
-            # peak_demand_in_kw_percentile = self \
-            #     .consumption_history\
-            #     .measured_peak_demand_in_kw.quantile(p)
-            # percentiles[p_str].peak_demand_in_kw = [peak_demand_in_kw_percentile]*self.history_length
-            self.__calculate_percentile(percentiles, p, p_str, peak=True)
+            peak_demand_in_kw_percentile = self \
+                .consumption_history.measured_peak_demand_in_kw.quantile(p)
+            percentiles[p_str].peak_demand_in_kw = [peak_demand_in_kw_percentile]*self.history_length
 
             # Calcula percentil fora de pico
-            # off_peak_demand_in_kw_percentile = self\
-            #     .consumption_history\
-            #     .measured_off_peak_demand_in_kw.quantile(p)
-            # percentiles[p_str].off_peak_demand_in_kw = off_peak_demand_in_kw_percentile
-            self.__calculate_percentile(percentiles, p, p_str, peak=False)
+            off_peak_demand_in_kw_percentile = self\
+                .consumption_history.measured_off_peak_demand_in_kw.quantile(p)
+            percentiles[p_str].off_peak_demand_in_kw = off_peak_demand_in_kw_percentile
 
             # Ultrapassagem = max(0, demanda_medida - demanda_percentil)
             percentiles[p_str].exceeded_peak_demand_in_kw = \
@@ -76,22 +72,15 @@ class BluePercentileCalculator():
             # Calcular totais de valor
             percentiles[p_str].total_in_reais = percentiles[p_str].demand_total_value_in_reais.sum()
         return percentiles
-    
-    def __calculate_percentile(self, percentiles: 'dict[str, DataFrame]', p: float, p_str: str, peak: bool):
-        column = '%speak_demand_in_kw' % ('' if peak else 'off_')
-        demand_percentile = self \
-            .consumption_history[f'measured_{column}'].quantile(p)
-        percentiles[p_str][column] = [demand_percentile]*self.history_length
-
 
     def __calculate_summary(self, percentiles: 'dict[str, DataFrame]'):
         summary = DataFrame(columns=self.SUMMARY_HEADERS)
 
         min_p_str, \
             smallest_total_demand_value_in_reais = self.__find_percentile_with_smallest_total_demand(percentiles)
-        
+
         SAFETY_MARGIN = 1.05
-        # TODO: O ideal é que demand_[off_]peak_in_kw fosse apenas um valor no 
+        # TODO: O ideal é que demand_[off_]peak_in_kw fosse apenas um valor no
         # "resumo" e não uma coluna inteira
         summary.smallest_total_demand_value_in_reais = smallest_total_demand_value_in_reais
         summary.peak_demand_in_kw = SAFETY_MARGIN * percentiles[min_p_str].peak_demand_in_kw
@@ -119,17 +108,17 @@ class BluePercentileCalculator():
             + 3*summary.exceeded_peak_demand_in_kw*self.tariff.peak_tusd_in_reais_per_kw\
             + summary.off_peak_demand_in_kw*self.tariff.off_peak_tusd_in_reais_per_kw\
             + 3*summary.exceeded_off_peak_demand_in_kw*self.tariff.off_peak_tusd_in_reais_per_kw
-        
+
         summary.total_value_in_reais = \
             summary.demand_value_in_reais + summary.consumption_value_in_reais
-        
+
         summary.total_consumption_value_in_reais = summary.consumption_value_in_reais.sum()
 
         summary.total_total_value_in_reais = \
             summary.total_consumption_value_in_reais + smallest_total_demand_value_in_reais
 
         return summary
-    
+
     def __find_percentile_with_smallest_total_demand(self, percentiles: 'dict[str, DataFrame]') -> 'tuple[str, float]':
         smallest_total_demand_value_in_reais = inf
         min_p_str = ''
