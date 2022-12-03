@@ -1,4 +1,3 @@
-from pandas import DataFrame
 from pandas.testing import assert_frame_equal
 import pytest
 from pytest import approx
@@ -9,15 +8,13 @@ from tests.recommendation.readcsv import test_cases
 
 from .readcsv import test_cases
 
-from tests.recommendation.readcsv import consumption_history, g_expected_summary, g_expected_percentiles
 
 PERCENTILES = GreenPercentileCalculator.PERCENTILES
-PERCENTILE_HEADERS = GreenPercentileCalculator.PERCENTILE_HEADERS
-SUMMARY_HEADERS = GreenPercentileCalculator.SUMMARY_HEADERS
 
 test_data = [(_id) for _id in test_cases.keys()]
 
 ABSOLUTE_TOLERANCE = 0.01
+
 
 @pytest.mark.parametrize('_id', test_data)
 def test_blue_per_calculator(_id: str):
@@ -46,10 +43,10 @@ def test_blue_per_calculator(_id: str):
         data.expected_green_summary,
         check_exact=False,
         atol=ABSOLUTE_TOLERANCE)
-    
+
     values = data.expected_summary_scalar_values
     assert approx(values['green']['smallest_total_demand_value_in_reais'], abs=ABSOLUTE_TOLERANCE) == result.summary.smallest_total_demand_value_in_reais
     assert approx(values['green']['off_peak_demand_in_kw'], abs=ABSOLUTE_TOLERANCE) == result.summary.off_peak_demand_in_kw
     assert approx(values['green']['total_consumption_value_in_reais'], abs=ABSOLUTE_TOLERANCE) == result.summary.total_consumption_value_in_reais
     assert approx(values['green']['total_demand_value_in_reais'], abs=ABSOLUTE_TOLERANCE) == result.summary.total_demand_value_in_reais
-    assert approx(values['green']['total_total_value_in_reais'], abs=ABSOLUTE_TOLERANCE) ==  result.summary.total_total_value_in_reais
+    assert approx(values['green']['total_total_value_in_reais'], abs=ABSOLUTE_TOLERANCE) == result.summary.total_total_value_in_reais

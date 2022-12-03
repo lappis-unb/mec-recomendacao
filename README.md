@@ -38,7 +38,7 @@ Algumas das respostas esperadas estão hard coded nos casos de teste. Esses valo
 assim como os dos arquivos, foram obtidos diretamente da planilha.
 
 Para ter uma ideia dos dados de entrada e saída e suas formas, dê uma
-olhada em [docs/entrada-saida.md](docs/entrada-saida.md).
+olhada em [data](tests/recommendation/data/readme.md).
 
 
 ## Setup
