@@ -31,13 +31,30 @@ Até o momento desta escrita, o arquivo `data/consumption.csv` contém os dados 
 entrada do cálculo, enquanto que os arquivos `data/{blue|green}_per_*.csv` são 
 respostas esperadas para os testes.
 
-Cada conjunto de dados de uma unidade consumidora é um caso de dados. Esses
-casos de dados são definidos em `tests/recommendation/data/test_cases.py`. Cada
-caso de teste é identificado pelo **código** da unidade consumidora em 
-`tests/recommendation/data/uc_{code}`. 
+Cada conjunto de dados de uma unidade consumidora é um caso de teste. Esses
+casos de teste são definidos em 
+[test_cases.py](/tests/recommendation/test_cases.py). Cada caso de teste é 
+identificado pelo **código** da unidade consumidora em 
+`tests/recommendation/data/uc_{code}`. Os casos de teste habilitados podem ser
+conferidos executando 
 
-Para ter uma ideia dos dados de entrada e saída e suas formas, dê uma
-olhada em [data](tests/recommendation/data/readme.md).
+```
+pytest -k recommendation --collect-only
+```
+
+Você deve ver algumas linhas do tipo:
+
+```
+<Package recommendation>
+  <Module test_blue_percentile_calculator.py>
+    <Function test_blue_per_calculator[1011101-5]>
+  <Module test_green_percentile_calculator.py>
+    <Function test_blue_per_calculator[1011101-5]>
+  <Module test_recommendation.py>
+    <Function test_recommendation[1011101-5]>
+```
+
+Para ter uma ideia dos dados de entrada e saída e suas formas, continue lendo.
 
 
 ## Estrutura de pastas
