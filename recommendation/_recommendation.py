@@ -3,6 +3,7 @@ from pandas import DataFrame
 from recommendation.green import GreenPercentileCalculator, GreenPercentileResult, GreenTariff
 from recommendation.blue import BluePercentileCalculator, BluePercentileResult, BlueTariff
 
+from recommendation.tariff import Tariff
 
 class ContractRecommendationResult:
     '''
@@ -54,12 +55,12 @@ class ContractRecommendationCalculator:
         frame = DataFrame(columns=self.HEADERS)
 
         if self.blue_summary.total_total_value_in_reais < self.green_summary.total_total_value_in_reais:
-            rec.tariff_flag = 'blue'
+            rec.tariff_flag = Tariff.BLUE
             frame.off_peak_demand_in_kw = self.blue_summary.off_peak_demand_in_kw
             frame.consumption_value_in_reais = self.blue_summary.consumption_value_in_reais
             frame.demand_value_in_reais = self.blue_summary.demand_value_in_reais
         else:
-            rec.tariff_flag = 'green'
+            rec.tariff_flag = Tariff.GREEN
             frame.off_peak_demand_in_kw = self.green_summary.off_peak_demand_in_kw
             frame.consumption_value_in_reais = self.green_summary.consumption_value_in_reais
             frame.demand_value_in_reais = self.green_summary.demand_value_in_reais
@@ -84,7 +85,7 @@ class ContractRecommendationCalculator:
 
     def _calculate_current_contract(self):
         current_contract = DataFrame(columns=self.CURRENT_CONTRACT_HEADERS)
-        if self.current_tariff_flag == 'green':
+        if self.current_tariff_flag == Tariff.GREEN:
             current_contract.consumption_value_in_reais = \
                 self.consumption_history.consumption_peak_in_kwh * \
                 (self.green_tariff.peak_tusd_in_reais_per_mwh + self.green_tariff.peak_te_in_reais_per_mwh) \
@@ -95,7 +96,7 @@ class ContractRecommendationCalculator:
             current_contract.demand_value_in_reais = \
                 self.green_tariff.na_tusd_in_reais_per_kw*self.consumption_history.contract_off_peak_demand_in_kw \
                 + 3*self.green_tariff.na_tusd_in_reais_per_kw * (self.consumption_history.peak_exceeded_in_kw + self.consumption_history.off_peak_exceeded_in_kw)
-        else:
+        elif self.current_tariff_flag == Tariff.BLUE:
             # FIXME: Esse caminho não foi testado pq o contrato atual é VERDE
             current_contract.consumption_value_in_reais = \
                 self.consumption_history.consumption_peak_in_kwh * \
@@ -108,6 +109,8 @@ class ContractRecommendationCalculator:
                 self.blue_tariff.peak_tusd_in_reais_per_kw *\
                 (self.consumption_history.contract_peak_demand_in_kw + 3*self.consumption_history.peak_exceeded_in_kw) \
                 + 3*self.blue_tariff.off_peak_tusd_in_reais_per_kw*self.consumption_history.off_peak_exceeded_in_kw
+        else:
+            raise Exception(f'Not recognized tariff flag: {self.current_tariff_flag}. Accepted: "{Tariff.BLUE}", "{Tariff.GREEN}".')
 
         current_contract.value_in_reais = \
             current_contract.consumption_value_in_reais + current_contract.demand_value_in_reais

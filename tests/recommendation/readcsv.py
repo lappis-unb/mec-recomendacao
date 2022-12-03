@@ -55,12 +55,8 @@ class CsvReader:
         tariff = json.load(fj)
         data.blue_tariff = BlueTariff(**tariff['blue'])
         data.green_tariff = GreenTariff(**tariff['green'])
-        f1 = open(join(self.path, 'recommended_tariff_flag.txt'))
-        f2 = open(join(self.path, 'current_tariff_flag.txt'))
-        data.expected_recommended_tariff_flag = f1.read().strip()
-        data.current_tariff_flag = f2.read().strip()
-        f1.close()
-        f2.close()
+        data.expected_recommended_tariff_flag = tariff['recommended_flag']
+        data.current_tariff_flag = tariff['current_flag']
         fj.close()
         return data
 

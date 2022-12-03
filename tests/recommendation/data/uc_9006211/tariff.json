@@ -13,5 +13,7 @@
         "off_peak_tusd_in_reais_per_mwh": 77.86,
         "off_peak_te_in_reais_per_mwh": 281.29,
         "na_tusd_in_reais_per_kw": 22.76
-    }
+    },
+    "recommended_flag": "G",
+    "current_flag": "G"
 }

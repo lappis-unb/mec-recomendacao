@@ -2,9 +2,8 @@ from dataclasses import dataclass
 from enum import Enum
 
 class Tariff:
-    class Flag(Enum):
-        BLUE = 'B'
-        GREEN = 'G'
+    BLUE = 'B'
+    GREEN = 'G'
 
 @dataclass
 class BlueTariff:
