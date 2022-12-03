@@ -1,4 +1,4 @@
-from tests.recommendation.readcsv import test_cases
+from tests.recommendation.test_cases import test_cases
 from pandas.testing import assert_frame_equal
 import pytest
 from pytest import approx
@@ -8,11 +8,11 @@ from recommendation.blue import BluePercentileCalculator
 
 PERCENTILES = BluePercentileCalculator.PERCENTILES
 ABSOLUTE_TOLERANCE = 0.01
-test_data = [(_id) for _id in test_cases.keys()]
+test_data = [code for code in test_cases.keys()]
 
-@pytest.mark.parametrize('_id', test_data)
-def test_blue_per_calculator(_id: str):
-    data = test_cases[_id]
+@pytest.mark.parametrize('code', test_data)
+def test_blue_per_calculator(code: str):
+    data = test_cases[code]
     consumption_history = data.consumption_history
     sut = BluePercentileCalculator(consumption_history, data.blue_tariff)
     result = sut.calculate()

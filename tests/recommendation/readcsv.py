@@ -3,7 +3,6 @@ import json
 from os.path import join
 from pandas import DataFrame
 
-from recommendation.tariff import Tariff
 from recommendation.green import GreenPercentileCalculator, GreenTariff
 from recommendation.blue import BluePercentileCalculator, BlueTariff
 from recommendation import ContractRecommendationCalculator
@@ -109,31 +108,3 @@ class CsvReader:
         tariff = json.load(f)
         f.close()
         return tariff
-
-
-# Os casos de teste estão em recommendation/tests/data/uc_{id}/**
-# Esses id's devem entrar na lista abaixo:
-__ucs_ids = [
-    '1011101-5',
-    # '9006211',
-]
-
-def __setup_test_cases():
-    readers = [CsvReader(_id) for _id in __ucs_ids]
-    datas = [reader.run() for reader in readers]
-
-    test_cases: dict[str, CsvData] = {}
-    for _id, data in zip(__ucs_ids, datas):
-        test_cases[_id] = data
-    
-    return test_cases
-
-test_cases = __setup_test_cases()
-
-consumption_history = test_cases['1011101-5'].consumption_history
-b_expected_percentiles = test_cases['1011101-5'].expected_blue_percentiles
-g_expected_percentiles = test_cases['1011101-5'].expected_green_percentiles
-b_expected_summary = test_cases['1011101-5'].expected_blue_summary
-g_expected_summary = test_cases['1011101-5'].expected_green_summary
-expected_recommendation = test_cases['1011101-5'].expected_recommendation
-expected_current_contract = test_cases['1011101-5'].expected_current_contract
