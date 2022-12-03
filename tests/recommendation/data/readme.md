@@ -1,5 +1,45 @@
 # Breve explicação sobre os dados
 
+## Visão geral
+
+"Arquitetura" das calculadoras:
+
+    RecommendationCalculator
+        BlueCalculator | GreenCalculator
+        ContractRecommendationCalculator
+
+    Entrada -> RecommendationCalculator -> Saída
+
+O `|` é pra indicar que não há uma ordem obrigatória entre verde e azul.
+
+**Entrada**
+- histórico de consumo
+- bandeira tarifa atual
+- tarifa azul
+- tarifa verde
+
+**Saída**
+- tabela do contrato atual
+- tabela do contrato recomendado
+- e outras coisas a serem definidas
+
+## Dados de entrada e saída
+
+Os dados estão de entrada e saída estão em `recommendation/tests/data/`.
+
+Até o momento desta escrita, o arquivo `data/consumption.csv` contém os dados de
+entrada do cálculo, enquanto que os arquivos `data/{blue|green}_per_*.csv` são 
+respostas esperadas para os testes.
+
+Cada conjunto de dados de uma unidade consumidora é um caso de dados. Esses
+casos de dados são definidos em `tests/recommendation/data/test_cases.py`. Cada
+caso de teste é identificado pelo **código** da unidade consumidora em 
+`tests/recommendation/data/uc_{code}`. 
+
+Para ter uma ideia dos dados de entrada e saída e suas formas, dê uma
+olhada em [data](tests/recommendation/data/readme.md).
+
+
 ## Estrutura de pastas
 
 `data/uc_<id da UC>`:
@@ -20,7 +60,7 @@
 ### Valores escalares
 Um `DataFrame` do Pandas não armazena valores escalares, apenas valores do 
 tipo lista (Series). Ainda assim, os valores dos arquivos a seguir foram 
-armazenados como columas (Series) até ser encontrada uma representação melhor.
+armazenados como colunas (Series) até ser encontrada uma representação melhor.
 
 `per_total_in_reais.json`: contém os totais de valores em reais de cada 
 percentil (0.1 -> 0.98) pra cada modalidade (azul e verde).

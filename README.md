@@ -3,43 +3,10 @@
 Este repositório é um local temporário pra ir 
 rascunhando o módulo de recomendação do contrato.
 
-## Visão geral
-
-"Arquitetura" das calculadoras:
-
-    RecommendationCalculator
-        BlueCalculator | GreenCalculator
-        ContractRecommendationCalculator
-
-    Entrada -> RecommendationCalculator -> Saída
-
-O `|` é pra indicar que não há uma ordem obrigatória entre verde e azul.
-
-**Entrada**
-- histórico de consumo
-- modalidade tarifa atual
-- tarifa azul
-- tarifa verde
-
-**Saída**
-- tabela do contrato atual
-- tabela do contrato recomendado
-- e outras coisas a serem definidas
-
-## Dados de entrada e saída
-
-Os dados estão dentrada e saída estão em `recommendation/tests/data/`.
-
-Até o momento desta escrita, o arquivo `data/consumption.csv` contém os dados de
-entrada do cálculo, enquanto que os arquivos `data/{blue|green}_per_*.csv` são 
-respostas esperadas para os testes.
-
-Algumas das respostas esperadas estão hard coded nos casos de teste. Esses valores,
-assim como os dos arquivos, foram obtidos diretamente da planilha.
-
-Para ter uma ideia dos dados de entrada e saída e suas formas, dê uma
-olhada em [data](tests/recommendation/data/readme.md).
-
+**IMPORTANTE**: 
+para ter uma ideia melhor sobre como estão organizados os casos de teste
+e como são os formatos dos dados de entrada e saída, dê uma olhada 
+[aqui](tests/recommendation/data/readme.md).
 
 ## Setup
 
@@ -81,10 +48,6 @@ Depois abra o arquivo `coverage/index.html` no navegador.
 
 Para mais informações sobre cobertura de testes, leia a 
 [documentação](https://pytest-cov.readthedocs.io/en/latest/).
-
-**Note** que testes marcados com `@pytest.mark.order` precisam ser 
-executados em uma ordem específica. Em especial, provavelmente apenas o teste 
-marcado com `@pytest.mark.order(1)` pode ser executado isoladamente.
 
 Para saber mais sobre como filtrar testes por módulo, classes ou métodos, consulte
 a [documentação do Pytest](https://docs.pytest.org/en/4.6.x/example/markers.html#using-k-expr-to-select-tests-based-on-their-name).
